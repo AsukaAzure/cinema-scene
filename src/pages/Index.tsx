@@ -32,10 +32,6 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="container mx-auto px-4 py-16 sm:py-20 relative">
           <div className="mx-auto max-w-2xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs text-primary">
-              <Sparkles className="h-3.5 w-3.5" />
-              Now Showing
-            </div>
             <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Book Your <span className="text-gradient">Cinema</span> Experience
             </h1>
@@ -79,7 +75,7 @@ const Index = () => {
                 className="group overflow-hidden border-border/50 bg-card transition-all duration-300 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 animate-fade-in"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
-                <div className="relative aspect-[2/3] overflow-hidden bg-muted">
+                <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                   {movie.poster_url ? (
                     <img
                       src={movie.poster_url}
