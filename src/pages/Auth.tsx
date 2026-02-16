@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Film } from "lucide-react";
+import { Clapperboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 
@@ -54,10 +54,15 @@ const Auth = () => {
 
   return (
     <main className="flex min-h-[80vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-card">
-        <CardHeader className="text-center">
-          <Film className="mx-auto mb-2 h-10 w-10 text-primary" />
-          <CardTitle className="text-2xl">{isSignUp ? "Create Account" : "Welcome Back"}</CardTitle>
+      <Card className="w-full max-w-md border-border/50 bg-card animate-scale-in">
+        <CardHeader className="text-center pb-2">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+            <Clapperboard className="h-7 w-7 text-primary" />
+          </div>
+          <CardTitle className="font-display text-2xl">{isSignUp ? "Create Account" : "Welcome Back"}</CardTitle>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {isSignUp ? "Sign up to start booking tickets" : "Sign in to your account"}
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -67,6 +72,7 @@ const Auth = () => {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
+                className="bg-secondary/50"
               />
             )}
             <Input
@@ -75,6 +81,7 @@ const Auth = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="bg-secondary/50"
             />
             <Input
               type="password"
@@ -83,16 +90,17 @@ const Auth = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
+              className="bg-secondary/50"
             />
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full rounded-xl glow-primary" disabled={loading}>
               {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
               type="button"
-              className="text-primary underline-offset-4 hover:underline"
+              className="font-medium text-primary hover:underline underline-offset-4"
               onClick={() => setIsSignUp(!isSignUp)}
             >
               {isSignUp ? "Sign In" : "Sign Up"}
