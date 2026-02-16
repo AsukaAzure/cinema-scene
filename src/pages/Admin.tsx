@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Plus, Trash2, Film, DollarSign, Ticket, X } from "lucide-react";
+import { Plus, Trash2, Film, IndianRupee, Ticket, X, TrendingUp, Clapperboard } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Movie = Tables<"movies">;
@@ -92,7 +92,6 @@ const Admin = () => {
       return;
     }
 
-    // Add showtimes
     const validShowtimes = showtimeInputs.filter((s) => s.trim());
     if (validShowtimes.length > 0) {
       await supabase.from("showtimes").insert(
@@ -130,74 +129,74 @@ const Admin = () => {
     setShowtimeInputs(["10:00 AM", "1:30 PM", "6:00 PM", "9:30 PM"]);
   };
 
-  if (authLoading || loading) return <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">Loading...</div>;
+  if (authLoading || loading)
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Admin <span className="text-primary">Dashboard</span></h1>
+    <main className="container mx-auto px-4 py-10">
+      <div className="mb-8">
+        <h1 className="font-display text-3xl font-bold sm:text-4xl">
+          Admin <span className="text-gradient">Dashboard</span>
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">Manage movies, showtimes and track revenue</p>
+      </div>
 
       {/* Stats */}
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="bg-card">
-          <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-primary/10 p-3"><Film className="h-6 w-6 text-primary" /></div>
-            <div>
-              <p className="text-sm text-muted-foreground">Total Movies</p>
-              <p className="text-2xl font-bold">{movies.length}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-card">
-          <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-primary/10 p-3"><Ticket className="h-6 w-6 text-primary" /></div>
-            <div>
-              <p className="text-sm text-muted-foreground">Total Bookings</p>
-              <p className="text-2xl font-bold">{totalBookings}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-card">
-          <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-primary/10 p-3"><DollarSign className="h-6 w-6 text-primary" /></div>
-            <div>
-              <p className="text-sm text-muted-foreground">Total Revenue</p>
-              <p className="text-2xl font-bold">₹{totalRevenue.toLocaleString()}</p>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {[
+          { icon: Clapperboard, label: "Total Movies", value: movies.length, color: "text-primary" },
+          { icon: Ticket, label: "Total Bookings", value: totalBookings, color: "text-seat-available" },
+          { icon: TrendingUp, label: "Revenue", value: `₹${totalRevenue.toLocaleString()}`, color: "text-primary" },
+        ].map((stat, i) => (
+          <Card key={i} className="border-border/50 bg-card animate-fade-in" style={{ animationDelay: `${i * 80}ms` }}>
+            <CardContent className="flex items-center gap-4 p-5">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                <stat.icon className={`h-6 w-6 ${stat.color}`} />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <p className="text-2xl font-bold">{stat.value}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Add Movie */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Movies</h2>
-        <Button onClick={() => setShowForm(!showForm)}>
-          {showForm ? <><X className="mr-1 h-4 w-4" /> Cancel</> : <><Plus className="mr-1 h-4 w-4" /> Add Movie</>}
+        <h2 className="text-lg font-semibold">Movies</h2>
+        <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "outline" : "default"} className="rounded-xl">
+          {showForm ? <><X className="mr-1.5 h-4 w-4" /> Cancel</> : <><Plus className="mr-1.5 h-4 w-4" /> Add Movie</>}
         </Button>
       </div>
 
       {showForm && (
-        <Card className="mb-6 bg-card">
+        <Card className="mb-6 border-primary/20 bg-card animate-scale-in">
           <CardHeader><CardTitle>New Movie</CardTitle></CardHeader>
           <CardContent>
             <form onSubmit={addMovie} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                <Input placeholder="Genre" value={genre} onChange={(e) => setGenre(e.target.value)} required />
-                <Input placeholder="Duration (minutes)" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} required />
-                <Input placeholder="Ticket Price" type="number" step="0.01" value={ticketPrice} onChange={(e) => setTicketPrice(e.target.value)} required />
+                <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required className="bg-secondary/50" />
+                <Input placeholder="Genre" value={genre} onChange={(e) => setGenre(e.target.value)} required className="bg-secondary/50" />
+                <Input placeholder="Duration (minutes)" type="number" value={duration} onChange={(e) => setDuration(e.target.value)} required className="bg-secondary/50" />
+                <Input placeholder="Ticket Price" type="number" step="0.01" value={ticketPrice} onChange={(e) => setTicketPrice(e.target.value)} required className="bg-secondary/50" />
               </div>
-              <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} className="bg-secondary/50" />
               <div>
-                <label className="mb-1 block text-sm text-muted-foreground">Poster Image</label>
-                <Input type="file" accept="image/*" onChange={(e) => setPosterFile(e.target.files?.[0] || null)} />
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">Poster Image</label>
+                <Input type="file" accept="image/*" onChange={(e) => setPosterFile(e.target.files?.[0] || null)} className="bg-secondary/50" />
               </div>
               <div>
-                <label className="mb-1 block text-sm text-muted-foreground">Showtimes</label>
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">Showtimes</label>
                 <div className="flex flex-wrap gap-2">
                   {showtimeInputs.map((st, i) => (
                     <div key={i} className="flex items-center gap-1">
                       <Input
-                        className="w-32"
+                        className="w-32 bg-secondary/50"
                         value={st}
                         onChange={(e) => {
                           const updated = [...showtimeInputs];
@@ -205,33 +204,33 @@ const Admin = () => {
                           setShowtimeInputs(updated);
                         }}
                       />
-                      <button type="button" onClick={() => setShowtimeInputs(showtimeInputs.filter((_, j) => j !== i))}>
+                      <button type="button" onClick={() => setShowtimeInputs(showtimeInputs.filter((_, j) => j !== i))} className="rounded p-1 hover:bg-destructive/10">
                         <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                       </button>
                     </div>
                   ))}
-                  <Button type="button" variant="outline" size="sm" onClick={() => setShowtimeInputs([...showtimeInputs, ""])}>
+                  <Button type="button" variant="outline" size="sm" onClick={() => setShowtimeInputs([...showtimeInputs, ""])} className="rounded-lg">
                     <Plus className="mr-1 h-3 w-3" /> Add
                   </Button>
                 </div>
               </div>
-              <Button type="submit" disabled={saving}>{saving ? "Saving..." : "Add Movie"}</Button>
+              <Button type="submit" disabled={saving} className="rounded-xl glow-primary">{saving ? "Saving..." : "Add Movie"}</Button>
             </form>
           </CardContent>
         </Card>
       )}
 
       {/* Movie List */}
-      <div className="space-y-3">
-        {movies.map((movie) => (
-          <Card key={movie.id} className="bg-card">
+      <div className="space-y-2">
+        {movies.map((movie, i) => (
+          <Card key={movie.id} className="border-border/50 bg-card transition-colors hover:border-primary/20 animate-fade-in" style={{ animationDelay: `${i * 40}ms` }}>
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-9 overflow-hidden rounded bg-muted">
+                <div className="h-12 w-9 overflow-hidden rounded-lg bg-muted flex-shrink-0">
                   {movie.poster_url ? (
                     <img src={movie.poster_url} alt="" className="h-full w-full object-cover" />
                   ) : (
-                    <div className="flex h-full items-center justify-center"><Film className="h-4 w-4 text-muted-foreground/30" /></div>
+                    <div className="flex h-full items-center justify-center"><Film className="h-4 w-4 text-muted-foreground/20" /></div>
                   )}
                 </div>
                 <div>
@@ -239,8 +238,8 @@ const Admin = () => {
                   <p className="text-xs text-muted-foreground">{movie.genre} · {movie.duration}min · ₹{movie.ticket_price}</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => deleteMovie(movie.id)}>
-                <Trash2 className="h-4 w-4 text-destructive" />
+              <Button variant="ghost" size="icon" onClick={() => deleteMovie(movie.id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+                <Trash2 className="h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
